@@ -2,10 +2,12 @@
   <div>
     <h2>Register</h2>
     <form @submit.prevent="register">
-      <label for="username">Username:</label>
+      <label for="username">Phone Number:</label>
       <input type="text" id="username" v-model="username" placeholder="申請新帳號限定為手機號碼" maxlength="10" @input="limitInputLength" required>
       <label for="password">Password:</label>
       <input type="password" id="password" v-model="password" required>
+      <label for="name">your name:</label>
+      <input type="text" id="name" v-model="name" required>
       <button type="submit">Register</button>
     </form>
   </div>
@@ -39,6 +41,7 @@ export default {
         const response = await axios.post('http://localhost:8787/api/register', {
           userPhone: this.username, // 確保這裡是 userPhone
           password: this.password,
+          userName: this.name
         });
 
         if (response.status === 200) {
