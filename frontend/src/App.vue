@@ -1,65 +1,43 @@
 <template>
   <div id="app">
-    <login v-if="!loggedIn" @login="login" />
-    <register v-if="!loggedIn" @register="register" />
-    <post v-if="loggedIn" @add-post="addPost" />
-    <div v-if="loggedIn">
-      <h2>All Posts</h2>
-      <div v-for="post in posts" :key="post.id">
-        <p>{{ post.content }}</p>
-        <comment-section :postId="post.id" @add-comment="addComment" />
-      </div>
-    </div>
+    <LogIn v-if="!isAuthenticated" @loginSuccess="handleLoginSuccess"/>
+    <RegisterUser v-if="!isAuthenticated"/>
+    <SocialMedia v-if="isAuthenticated"/>
   </div>
 </template>
 
 <script>
-import Login from './components/LoginCom.vue';
-import Register from './components/RegisterCom.vue';
-import Post from './components/PostCom.vue';
-import CommentSection from './components/CommentCom.vue'; 
+import LogIn from './components/LogIn.vue';
+import RegisterUser from './components/RegisterUser.vue';
+import SocialMedia from './components/SocialMedia.vue';
 
 export default {
   name: 'App',
   components: {
-    Login,
-    Register,
-    Post,
-    CommentSection
+    LogIn,
+    RegisterUser,
+    SocialMedia
   },
   data() {
     return {
-      loggedIn: false,
-      posts: []
-    };
+      isAuthenticated: false 
+    }
   },
   methods: {
-    login() {
-      // 登入邏輯
-      this.loggedIn = true;
-    },
-    register() {
-      // 註冊邏輯
-      this.loggedIn = true;
-    },
-    addPost(content) {
-      // 新增發文邏輯
-      this.posts.push({ id: this.posts.length + 1, content: content });
-    },
-    addComment({ postId, content }) {
-      // 新增留言邏輯
-      const post = this.posts.find(post => post.id === postId);
-      if (post) {
-        if (!post.comments) {
-          post.comments = [];
-        }
-        post.comments.push({ id: post.comments.length + 1, content: content });
-      }
+    handleLoginSuccess() {
+      this.isAuthenticated = true; 
     }
   }
-};
+}
 </script>
 
 <style>
-/* CSS樣式可以在這裡添加 */
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
 </style>
