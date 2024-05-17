@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-05-16 14:43:49
+-- 產生時間： 2024-05-17 18:40:46
 -- 伺服器版本： 10.4.27-MariaDB
 -- PHP 版本： 7.4.33
 
@@ -40,32 +40,11 @@ CREATE TABLE `comment` (
 --
 
 INSERT INTO `comment` (`comment_id`, `user_id`, `post_id`, `content`, `created_at`) VALUES
-(2, 12, 21, '123', '2024-05-16 20:09:05'),
-(3, 12, 21, '123123123123', '2024-05-16 20:10:26'),
-(4, 12, 21, '123123123123', '2024-05-16 20:10:27'),
-(5, 12, 21, '123123123123', '2024-05-16 20:10:28'),
-(6, 12, 21, '123', '2024-05-16 20:11:41'),
-(7, 12, 21, '123', '2024-05-16 20:11:42'),
-(8, 12, 21, '123', '2024-05-16 20:15:18'),
-(9, 12, 21, '123', '2024-05-16 20:16:10'),
-(10, 12, 21, '123123', '2024-05-16 20:17:02'),
-(11, 12, 21, '123123', '2024-05-16 20:17:06'),
-(12, 12, 21, '123123', '2024-05-16 20:17:07'),
-(13, 12, 21, '123', '2024-05-16 20:17:32'),
-(14, 12, 21, '123', '2024-05-16 20:17:46'),
-(15, 12, 21, '123', '2024-05-16 20:17:55'),
-(16, 12, 21, '123', '2024-05-16 20:19:07'),
-(17, 12, 21, '123', '2024-05-16 20:19:09'),
-(18, 12, 21, '123', '2024-05-16 20:19:10'),
-(19, 12, 21, '123', '2024-05-16 20:19:25'),
-(20, 12, 21, '123', '2024-05-16 20:19:30'),
-(21, 12, 21, '123', '2024-05-16 20:19:45'),
-(22, 12, 21, '123', '2024-05-16 20:19:48'),
-(23, 12, 21, '123', '2024-05-16 20:21:21'),
-(24, 12, 21, '123123', '2024-05-16 20:26:23'),
-(25, 12, 20, '123123', '2024-05-16 20:26:36'),
-(26, 12, 21, '123', '2024-05-16 20:29:03'),
-(27, 12, 21, '123', '2024-05-16 20:29:09');
+(1, 12, 22, '這是第一個測試', '2024-05-17 16:29:40'),
+(2, 12, 21, '第二個測試', '2024-05-17 16:30:40'),
+(3, 12, 22, '第三個測試', '2024-05-17 16:31:45'),
+(4, 12, 20, '最後一個測試', '2024-05-17 16:36:45'),
+(5, 12, 23, '完美成功', '2024-05-17 16:40:12');
 
 -- --------------------------------------------------------
 
@@ -86,7 +65,9 @@ CREATE TABLE `post` (
 
 INSERT INTO `post` (`post_id`, `user_id`, `content`, `created_at`) VALUES
 (20, 12, '第一則貼文，Good', '2024-05-16 11:23:11'),
-(21, 12, '測試看看是否能用Posts下的Comment', '2024-05-16 11:37:17');
+(21, 12, '測試看看是否能用Posts下的Comment', '2024-05-16 11:37:17'),
+(22, 12, 'Vue跟Spring齁勝', '2024-05-17 04:08:37'),
+(23, 12, '最後測試', '2024-05-17 16:40:05');
 
 -- --------------------------------------------------------
 
@@ -109,7 +90,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_phone`, `user_name`, `email`, `password`, `cover_image`, `biography`) VALUES
-(12, '0911223344', 'Alan', NULL, 'uiiPLq4PnuRzdhPtb08N7PnbMz+zUAU2JlxK6qkc35qQghjZ4uB4qndMIqFsqDUh', NULL, NULL);
+(12, '0911223344', 'Alan', NULL, 'uiiPLq4PnuRzdhPtb08N7PnbMz+zUAU2JlxK6qkc35qQghjZ4uB4qndMIqFsqDUh', NULL, NULL),
+(13, '0911111111', 'Sam', NULL, 'RH6InTLZtqRErlgb77IKeDu8pxICbB9wGBLOPMUlLTpWrVXCvC5tua3yrRIwdNTF', NULL, NULL);
 
 --
 -- 已傾印資料表的索引
@@ -119,9 +101,7 @@ INSERT INTO `users` (`user_id`, `user_phone`, `user_name`, `email`, `password`, 
 -- 資料表索引 `comment`
 --
 ALTER TABLE `comment`
-  ADD PRIMARY KEY (`comment_id`),
-  ADD KEY `fk_post_id` (`post_id`),
-  ADD KEY `cfk_user_id` (`user_id`);
+  ADD PRIMARY KEY (`comment_id`);
 
 --
 -- 資料表索引 `post`
@@ -144,30 +124,23 @@ ALTER TABLE `users`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `post`
 --
 ALTER TABLE `post`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- 已傾印資料表的限制式
 --
-
---
--- 資料表的限制式 `comment`
---
-ALTER TABLE `comment`
-  ADD CONSTRAINT `cfk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `fk_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`);
 
 --
 -- 資料表的限制式 `post`

@@ -1,12 +1,16 @@
 package backend;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "post")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
     private Long postId;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -20,7 +24,10 @@ public class Post {
 
     private String createdAt;
     
-
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
+    
+    
     // Getters and setters
 
     public Long getPostId() {
@@ -58,5 +65,13 @@ public class Post {
     
     public String getUserName() {
     	return this.user.getUserName();
+    }
+    
+    public List<Comment> getComments(){ 
+        return comments;
+    }
+    
+    public void setComments(List<Comment> comments) {
+    	this.comments = comments;
     }
 }
