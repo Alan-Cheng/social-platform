@@ -13,8 +13,10 @@
 本專案實現了以下主要功能：
 1. **註冊**: 用戶可以透過註冊頁面創建新帳戶。
 2. **登入**: 已註冊的用戶可以登入並進入個人主頁。
-3. **貼文**: 用戶可以發佈新的貼文，分享文字內容。
-4. **評論**: 用戶可以對貼文進行評論，互相交流。
+  ![image](https://github.com/Alan-Cheng/social-platform/blob/main/Login_Register.png)
+4. **貼文**: 用戶可以發佈新的貼文，分享文字內容。
+5. **評論**: 用戶可以對貼文進行評論，互相交流。
+  ![image](https://github.com/Alan-Cheng/social-platform/blob/main/Social_Page.png)
 
 ## 架構設計
 專案採用MVC（Model-View-Controller）架構設計，以確保程式碼的可維護性和擴展性：
