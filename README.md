@@ -14,8 +14,10 @@
 2. **登入**: 已註冊的用戶可以登入並進入社媒主頁。
   ![image](https://github.com/Alan-Cheng/social-platform/blob/main/Login_Register.png)
 4. **貼文**: 用戶可以發佈新的貼文，分享文字內容。
-5. **評論**: 用戶可以對貼文進行評論，互相交流。
+5. **留言**: 用戶可以於貼文下方留言，互相交流。
+6. **刪除貼文或評論**: 用戶可刪除自己的貼文或留言。
   ![image](https://github.com/Alan-Cheng/social-platform/blob/main/Social_Page.png)
+
 
 ## 架構設計
 專案採用MVC（Model-View-Controller）架構設計，以確保程式碼的可維護性和擴展性：
