@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -25,8 +25,10 @@ public class UserController {
             boolean isRegistered = userService.register(user);
             if (isRegistered) {
                 return ResponseEntity.ok("註冊成功");
+            } else if(isRegistered == false) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("註冊失敗");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("註冊失敗");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("註冊失敗");
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

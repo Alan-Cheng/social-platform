@@ -1,34 +1,38 @@
 <template>
   <div>
-    <h2>Social Media Page</h2>
+    <h1>社媒頁面</h1>
     <div>
-      <h3>Create a Post</h3>
-      <form @submit.prevent="createPost">
-        <textarea v-model="newPostContent" placeholder="What's on your mind?" required></textarea>
-        <button type="submit">Post</button>
+      <h2><strong>{{ this.$route.query.userName }}你好！</strong><br>新增你的貼文：</h2>
+      <form @submit.prevent="createPost" class="postForm">
+        <textarea v-model="newPostContent" placeholder="你在想什麼?" required class="postTextArea"></textarea>
+        <button type="submit" class="postButton">發文</button>
       </form>
     </div>
+
     <div>
-      <h3>Posts</h3>
+      <h2>所有貼文</h2>
       <div v-for="post in posts" :key="post.postId" class="post">
-        <p>{{ post.content }}</p>
-        <p>Posted by: {{ post.userName }}</p>
-        <p>Posted at: {{ post.createdAt }}</p>
-        <!-- 獨立的 comment 输入框 -->
-        <form @submit.prevent="addComment(post)">
-          <input type="text" v-model="post.newCommentContent" placeholder="Add a comment" required>
-          <button type="submit">Comment</button>
-        </form>
-        <!-- 顯示该 post 的 comments -->
-        <div v-for="comment in post.comments" :key="comment.commentId" class="comment">
-          <p>{{ comment.content }}</p>
-          <p>Commented by: {{ comment.userName }}</p>
-          <p>Commented at: {{ comment.createdAt }}</p>
+        <div class="post-content">
+          <p>{{ post.content }}</p>
+          <p><strong>{{ post.userName }}</strong> 建立於: {{ post.createdAt }}</p>
+          <button v-if="post.userId == this.$route.query.userId" @click="deletePost(post.postId)" class="deleteButton">刪除您的貼文與留言</button>
+          <form @submit.prevent="addComment(post)">
+            <input type="text" v-model="post.newCommentContent" placeholder="輸入留言" required>
+            <button type="submit" class="commentButton">新增留言</button>
+          </form>
+          <div v-for="comment in post.comments" :key="comment.commentId" class="comment">
+            <div class="comment-content">
+              <p>{{ comment.content }}</p>
+              <p><strong>{{ comment.userName }}</strong> 回覆於: {{ comment.createdAt }}</p>
+              <button v-if="comment.userId == this.$route.query.userId" @click="deleteComment(post.postId, comment.commentId)" class="deleteButton">刪除您的留言</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -38,25 +42,25 @@ export default {
     return {
       newPostContent: '',
       posts: [],
-      userId: null,
+      userId: this.$route.query.userId,
+      userName: this.$route.query.userName,
     };
   },
   created() {
     this.fetchPosts();
-    // 从本地存储中获取 userId
     this.userId = this.$route.query.userId;
   },
   methods: {
     createPost() {
       const newPost = {
         content: this.newPostContent,
-        userId: this.userId, // 使用当前用户的 userId
+        userId: this.$route.query.userId,
         comments: [],
         createdAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
       };
-      axios.post('http://localhost:8787/api/posts', newPost)
+      axios.post('http://localhost:8090/api/posts', newPost)
         .then(() => {
-          this.fetchPosts(); // 提交帖子后重新获取帖子列表
+          this.fetchPosts();
           this.newPostContent = '';
         })
         .catch(error => {
@@ -64,28 +68,45 @@ export default {
         });
     },
     addComment(post) {
-        const newComment = {
-          content: post.newCommentContent,
-          userId: this.userId, // 使用当前用户的 userId
-          createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-          postId: post.postId
-        };
-        axios.post(`http://localhost:8787/api/posts/${post.postId}/comments`, newComment)
-          .then(() => {
-            this.fetchPosts(); // 提交评论后重新获取帖子列表
-            post.newCommentContent = ''; // 清空评论输入框
-          })
-          .catch(error => {
-            console.error('Error adding comment:', error);
-          });
+      const newComment = {
+        content: post.newCommentContent,
+        userId: this.$route.query.userId,
+        createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        postId: post.postId
+      };
+      axios.post(`http://localhost:8090/api/posts/${post.postId}/comments`, newComment)
+        .then(() => {
+          this.fetchPosts();
+          post.newCommentContent = '';
+        })
+        .catch(error => {
+          console.error('Error adding comment:', error);
+        });
+    },
+    deletePost(postId) {
+      axios.delete(`http://localhost:8090/api/posts/${postId}`)
+        .then(() => {
+          this.fetchPosts();
+        })
+        .catch(error => {
+          console.error('Error deleting post:', error);
+        });
+    },
+    deleteComment(postId, commentId) {
+      axios.delete(`http://localhost:8090/api/posts/${postId}/comments/${commentId}`)
+        .then(() => {
+          this.fetchPosts();
+        })
+        .catch(error => {
+          console.error('Error deleting comment:', error);
+        });
     },
     fetchPosts() {
-      axios.get('http://localhost:8787/api/posts')
+      axios.get('http://localhost:8090/api/posts')
         .then(response => {
-          this.posts = response.data.reverse(); // 反转顺序
-          // 为每个 post 添加一个新评论的属性
+          this.posts = response.data.reverse();
           this.posts.forEach(post => {
-            post.newCommentContent = ''; // 为每个帖子添加评论输入框内容属性
+            post.newCommentContent = '';
           });
         })
         .catch(error => {
@@ -96,15 +117,117 @@ export default {
 };
 </script>
 
-<style scoped>
-.post {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
+<style>
+body {
+  background-color: rgba(203, 232, 241, 0.3); /* 淺藍色且透明度高 */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif; /* 設置字體 */
 }
+</style>
+
+<style scoped>
+/* Post 的樣式 */
+.post {
+  width: 80%; /* 使 post 寬度佔螢幕寬度的 80% */
+  margin: 0 auto; /* 使 post 在螢幕上居中 */
+  border: 2px solid #003366;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 相鄰 Post 背景顏色不同 */
+.post:nth-child(even) {
+  background-color: #e9ecef; /* 比如淡灰色 */
+}
+
+.post:nth-child(odd) {
+  background-color: #f9f9f9; /* 原本的背景顏色 */
+}
+
+/* 其他樣式保持不變 */
+.post p {
+  margin: 0;
+  padding: 5px 0;
+  color: #333;
+}
+
 .comment {
   margin-left: 20px;
-  border-top: 1px solid #eee;
-  padding-top: 5px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+  margin-top: 10px;
+  padding-left: 10px;
+  background-color: #f2f2f2;
+  border-left: 3px solid #007bff;
+  position: relative;
 }
+
+.comment-content, .post-content {
+  position: relative;
+}
+
+.comment p {
+  margin: 0;
+  padding: 3px 0;
+  color: #555;
+}
+
+form {
+  margin-top: 10px;
+}
+
+.postButton, .commentButton, .deleteButton {
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.postButton {
+  background-color: #2ba33d;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+}
+
+.commentButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+}
+
+.postButton:hover {
+  background-color: #2a923d;
+}
+
+.commentButton:hover {
+  background-color: #0056b3;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+textarea, input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
 </style>

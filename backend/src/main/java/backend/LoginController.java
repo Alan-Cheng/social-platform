@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.security.NoSuchAlgorithmException;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RestController
 public class LoginController {
 

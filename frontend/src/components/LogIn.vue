@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h2>Login</h2>
+    <h2>已有帳號請登入</h2>
     <form @submit.prevent="login">
-      <label for="username">Username:</label>
+      <label for="username">帳號:</label>
       <input type="text" id="username" v-model="username" maxlength="10" placeholder="帳號為您的手機號碼" required>
-      <label for="password">Password:</label>
+      <label for="password">密碼:</label>
       <input type="password" id="password" v-model="password" required>
-      <button type="submit">Login</button>
+      <button type="submit">登入</button>
     </form>
     <!-- 顯示登入結果消息 -->
     <div v-if="loginMessage">{{ loginMessage }}</div>
@@ -27,25 +27,32 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('http://localhost:8787/login', {
+        const response = await axios.post('http://localhost:8090/login', {
           username: this.username,
           password: this.password
         });
 
-        console.log(response.data);
         if (response.status === 200) {
           // 登入成功，設定登入消息
-          this.$router.push({ path: '/SocialMedia', query: { userId: response.data.userId } })
-          this.loginMessage = 'Login successful';
+          this.$router.push({ path: '/SocialMedia', query: { userId: response.data.userId, userName: response.data.userName } });
+          this.loginMessage = '登入成功';
           // 触发登录成功事件
           this.$emit('loginSuccess');
-        } else {
-          this.loginMessage = 'Login failed';
         }
       } catch (error) {
         console.error(error);
-        // 登入失敗，設定登入消息
-        this.loginMessage = 'Login failed';
+        if (error.response) {
+          // 根據後端返回的狀態碼顯示具體的錯誤訊息
+          if (error.response.status === 404) {
+            this.loginMessage = "帳號不存在";
+          } else if (error.response.status === 401) {
+            this.loginMessage = "密碼錯誤";
+          } else {
+            this.loginMessage = "登入失敗，請稍後再試";
+          }
+        } else {
+          this.loginMessage = "登入失敗，請檢查網絡連接或稍後再試";
+        }
       }
     }
   }

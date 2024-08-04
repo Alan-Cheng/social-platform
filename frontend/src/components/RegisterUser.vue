@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h2>Register</h2>
+    <h2>未申請帳號請註冊</h2>
     <form @submit.prevent="register">
-      <label for="username">Phone Number:</label>
+      <label for="username">手機號碼:</label>
       <input type="text" id="username" v-model="username" placeholder="申請新帳號限定為手機號碼" maxlength="10" @input="limitInputLength" required>
-      <label for="password">Password:</label>
+      <label for="password">密碼:</label>
       <input type="password" id="password" v-model="password" required>
-      <label for="name">your name:</label>
+      <label for="name">您的暱稱:</label>
       <input type="text" id="name" v-model="name" required>
-      <button type="submit">Register</button>
+      <button type="submit">註冊</button>
     </form>
   </div>
 </template>
@@ -21,6 +21,7 @@ export default {
     return {
       username: '',
       password: '',
+      rigidterMessage: '',
     }
   },
   methods: {
@@ -38,7 +39,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://localhost:8787/api/register', {
+        const response = await axios.post('http://localhost:8090/api/register', {
           userPhone: this.username, // 確保這裡是 userPhone
           password: this.password,
           userName: this.name
@@ -48,8 +49,12 @@ export default {
           window.alert('註冊成功，請以您的手機號碼與密碼登入');
         }
       } catch (error) {
+        if (error.response.status === 409) {
+          window.alert('此手機號碼已被註冊，請使用其他手機號碼');
+          return;
+        }
         console.error('註冊失敗', error);
-        window.alert('註冊失敗，請稍後再試');
+        window.alert('遇到連線問題，請檢查連線並稍後再試');
       }
     }
   }

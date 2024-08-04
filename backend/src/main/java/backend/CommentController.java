@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/posts/{postId}/comments")
 public class CommentController {
@@ -20,5 +20,10 @@ public class CommentController {
     @PostMapping
     public void addComment(@RequestBody Comment comment) {
     	commentService.addComment(comment);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public void deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
     }
 }
