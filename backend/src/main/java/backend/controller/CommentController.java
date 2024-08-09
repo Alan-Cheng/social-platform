@@ -1,7 +1,11 @@
-package backend;
+package backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import backend.model.Comment;
+import backend.service.CommentService;
+
 import java.util.List;
 
 @CrossOrigin(origins = "*")

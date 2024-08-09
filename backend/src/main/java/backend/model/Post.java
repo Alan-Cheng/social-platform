@@ -1,4 +1,4 @@
-package backend;
+package backend.model;
 
 import java.util.List;
 

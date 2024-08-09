@@ -1,7 +1,11 @@
-package backend;
+package backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import backend.model.Comment;
+import backend.repository.CommentRepository;
+
 import java.util.List;
 
 @Service

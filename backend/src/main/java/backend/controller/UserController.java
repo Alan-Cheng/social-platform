@@ -1,9 +1,13 @@
-package backend;
+package backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import backend.PasswordUtil;
+import backend.model.User;
+import backend.service.UserService;
 
 import java.security.NoSuchAlgorithmException;
 
